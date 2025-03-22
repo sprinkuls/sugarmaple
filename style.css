@@ -1,0 +1,111 @@
+div, span, body, h1 {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: 'Consolas', monospace;
+    font-size: 20px;
+
+    /* i'm having a hard time making up my mind on these */
+    color: #b3cd88;
+    color: #a5c473;
+    color: #96af6e;
+    background-color: #f1eee7;
+    /*background-image: url("bg.png");*/
+}
+
+#titlebar {
+    background-color: #f1eee7;
+    /* align the elements of the titlebar */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    /* center the titlebar */
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+    /* offset stuff below*/
+    margin-bottom: 2em;
+
+    /* a nice little width */
+    width: 45em;
+
+    /* pad the sides of the bar a lil bit */
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.2em;
+
+    border: 0.35em solid #b3cd88;
+    border-color: #c9d5b5;/**/
+    border-radius: 0.65em;
+    border-radius: 1em;
+
+    /* hide the top of the bar, and don't round the corners there */
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#sitename {
+}
+
+
+#stats {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+}
+
+#riseset {
+    /* pick colors is harddddddddddd */
+    /*color: #A6B1E1;*/
+}
+
+#moonicon {
+    font-size: 2em;
+    height: 1em;
+}
+
+#canvas {
+}
+
+/* main site content woah!!!! */
+#main {
+    background-color: #f1eee7;
+    border: 0.35em solid #b3cd88;
+    border-color: #c9d5b5;/**/
+    border-radius: 0.65em;
+    border-radius: 1em;
+
+    /* a nice little width */
+    width: 45em;
+
+    /* TEMP */
+    height: 700px;
+
+    /* center the titlebar */
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+    /* pad the sides of the bar a lil bit */
+    padding: 0.5em 1em;
+}
+
+
+.bm {
+    /*border: 2px #000 solid;*/
+}
+
+
+.fall {
+    transition: color 1.0s, border-color 1.0s;
+    &:hover {
+        color: #d03d11;
+        border-color: #d03d11;
+    }
+}
