@@ -6,6 +6,7 @@ div, span, body, h1 {
 body {
     font-family: 'Consolas', monospace;
     font-size: 20px;
+    /*font-size: 20px;*/
 
     /* i'm having a hard time making up my mind on these */
     color: #b3cd88;
@@ -60,9 +61,12 @@ body {
     gap: 2em;
 }
 
+#hearts {
+    color: #eec7bc
+}
+
 #riseset {
-    /* pick colors is harddddddddddd */
-    /*color: #A6B1E1;*/
+    color: #cd8e7f;
 }
 
 #moonicon {
@@ -85,7 +89,7 @@ body {
     width: 45em;
 
     /* TEMP */
-    height: 700px;
+    min-height: 20em;
 
     /* center the titlebar */
     margin: 0;
@@ -96,6 +100,13 @@ body {
     padding: 0.5em 1em;
 }
 
+#buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+}
 
 .bm {
     /*border: 2px #000 solid;*/
@@ -108,4 +119,12 @@ body {
         color: #d03d11;
         border-color: #d03d11;
     }
+}
+
+h1 {
+    color: #cd8e7f;
+}
+
+h2 {
+    color: #e9b7aa;
 }
