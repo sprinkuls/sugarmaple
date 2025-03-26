@@ -1,4 +1,4 @@
-div, span, body, h1 {
+img, a, div, span, body, h1, h2 {
     padding: 0;
     margin: 0;
 }
@@ -62,7 +62,7 @@ body {
 }
 
 #hearts {
-    color: #eec7bc
+    color: #e9b7aa;
 }
 
 #riseset {
@@ -79,6 +79,10 @@ body {
 
 /* main site content woah!!!! */
 #main {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+
     background-color: #f1eee7;
     border: 0.35em solid #b3cd88;
     border-color: #c9d5b5;/**/
@@ -97,15 +101,16 @@ body {
     margin-right: auto;
 
     /* pad the sides of the bar a lil bit */
-    padding: 0.5em 1em;
+    /*padding: 0.5em 1em;*/
+    padding: 1em;
+    padding-bottom: 0.25em;
 }
 
 #buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5em;
+    align-self: center;
 
+    /* make it go to the bottom of the container (#main, in this case) */
+    margin-top: auto;
 }
 
 .bm {
