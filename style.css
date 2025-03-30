@@ -3,9 +3,14 @@ img, a, div, span, body, h1, h2 {
     margin: 0;
 }
 
+h1 {
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+}
+
 body {
     font-family: 'Consolas', monospace;
-    font-size: 20px;
+    font-size: 18px;
     /*font-size: 20px;*/
 
     /* i'm having a hard time making up my mind on these */
@@ -58,15 +63,26 @@ body {
 #stats {
     display: flex;
     align-items: center;
-    gap: 2em;
+    gap: 1.2em;/**/
 }
 
 #hearts {
     color: #e9b7aa;
+    color: #cd8e7f;
+    font-size: larger;
 }
 
 #riseset {
+    margin-left: auto;
+    margin-right: auto;
     color: #cd8e7f;
+    color: #c37865;
+}
+
+#illum {
+    color: #cd8e7f;
+    color: #c37865;
+    max-width: 10em;
 }
 
 #moonicon {
@@ -114,7 +130,7 @@ body {
 }
 
 .bm {
-    /*border: 2px #000 solid;*/
+    border: 2px #000 solid;
 }
 
 

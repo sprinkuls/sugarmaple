@@ -1,4 +1,4 @@
-// all the code for these calculations was taken from the NOAA solar calculations
+// the code for these calculations was taken from the NOAA solar calculations
 // spreadsheets (https://gml.noaa.gov/grad/solcalc/calcdetails.html). the NOAA
 // website itself credits them to the book 'Astronomical Algorithms' by Jean Meeus.
 console.log("<|:3c");
@@ -6,6 +6,9 @@ console.log("<|:3c");
 // convenient definitions in UNIX millis
 const HOUR = 3600000;
 const DAY = 86400000;
+
+const RAD = Math.PI/180;
+const DEG = 180/Math.PI;
 
 // i was originally using ip-api.com for this, but you have to pay for an API
 // key if you want to make requests over HTTPS. neocities' csp means you *have*
@@ -15,7 +18,8 @@ async function getLatLon() {
   let response, json;
   // if something goes wrong, just use GNV's lat/long rather than throwing a fit
   try {
-    response = await fetch('https://ipwho.is/');
+    //response = await fetch('https://ipwho.is/');
+    response = await fetch('AHHHHH!!!');
     json = await response.json();
   } catch {
     return ([29.6516344, -82.3248262])
@@ -25,12 +29,15 @@ async function getLatLon() {
   if (isNaN(parseFloat(json.latitude)))
     return ([29.6516344, -82.3248262])
 
-  // yippieeeee things worked <|:3
+  // yippieeeee things worked
   return([json.latitude, json.longitude]);
 }
 // also, i know i could use the inbuilt browser functionality for this, but really
 // what is a greater bother than seeing the 'pleaseeee let this random site use your location'
 // popup when you're browsing? so i'm fine with this as a more low key way of doing things
+// maybe what i do is just put a little button that says "give me your location
+// so these get calculated with your latitude/longitude" so u entirely opt in
+// to seeing that stupid popup
 
 function getJulianDay(offset=0) {
   return 2440587.5 + ((Date.now()+(offset*DAY)) / (DAY));
@@ -43,9 +50,6 @@ function getJulianCentury(offset=0) {
 
 function getRiseSet(lat, long) {
   // convenience
-  let RAD = Math.PI/180;
-  let DEG = 180/Math.PI;
-
   let sin = Math.sin;
   let cos = Math.cos;
   let tan = Math.tan;
@@ -147,6 +151,13 @@ function UNIXtoHHMM(timestamp) {
   return `${hrs}:${mins}`;
 }
 
+// borrowed from https://celestialprogramming.com/meeus-illuminated_fraction_of_the_moon.html
+function constrain(angle) {
+    let tmp = angle%360;
+    if (tmp < 0) { tmp += 360; }
+    return tmp;
+}
+
 (async () => {
     const [lat, lon] = await getLatLon();
     let [rise, _, set] = getRiseSet(lat, lon);
@@ -157,4 +168,22 @@ function UNIXtoHHMM(timestamp) {
     let setEl = document.getElementById("sunset");
     riseEl.innerHTML = `sunrise: ${rise}`;
     setEl.innerHTML = `sunset:&nbsp; ${set}`;
+
+// calculate illumination
+// borrowed from https://celestialprogramming.com/meeus-illuminated_fraction_of_the_moon.html
+// (this one also takes from astronomical algorithms, thank you jean meeus)
+    const T=(getJulianDay()-2451545)/36525.0;
+
+    const D = constrain(297.8501921 + 445267.1114034*T - 0.0018819*T*T + 1.0/545868.0*T*T*T - 1.0/113065000.0*T*T*T*T)*RAD; //47.2
+    const M = constrain(357.5291092 + 35999.0502909*T - 0.0001536*T*T + 1.0/24490000.0*T*T*T)*RAD; //47.3
+    const Mp = constrain(134.9633964 + 477198.8675055*T + 0.0087414*T*T + 1.0/69699.0*T*T*T - 1.0/14712000.0*T*T*T*T)*RAD; //47.4
+
+    //48.4
+    const i=constrain(180 - D*180/Math.PI - 6.289 * Math.sin(Mp) + 2.1 * Math.sin(M) -1.274 * Math.sin(2*D - Mp) -0.658 * Math.sin(2*D) -0.214 * Math.sin(2*Mp) -0.11 * Math.sin(D))*RAD;
+
+    let k=(1+Math.cos(i))/2;
+    k = k.toFixed(2)
+    let illumEl = document.getElementById("illumtext");
+    illumEl.innerHTML = `${k}%`;
+
 })();
