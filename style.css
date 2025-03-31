@@ -51,9 +51,17 @@ body {
     border-radius: 1em;
 
     /* hide the top of the bar, and don't round the corners there */
+    /*
     border-top: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+    */
+    margin-top: -0.8em;
+    /* https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow */
+}
+
+.ds {
+    box-shadow: #f8d2c9 20px 20px;
 }
 
 #sitename {
