@@ -169,9 +169,11 @@ function constrain(angle) {
     riseEl.innerHTML = `sunrise: ${rise}`;
     setEl.innerHTML = `sunset:&nbsp; ${set}`;
 
-// calculate illumination
-// borrowed from https://celestialprogramming.com/meeus-illuminated_fraction_of_the_moon.html
-// (this one also takes from astronomical algorithms, thank you jean meeus)
+    // calculate illumination
+    // borrowed from https://celestialprogramming.com/meeus-illuminated_fraction_of_the_moon.html
+    // (this one also takes from astronomical algorithms, thank you jean meeus)
+    // reference for accuracy of data below:
+    // https://aa.usno.navy.mil/calculated/moon/fraction?year=2025&task=12&tz=5&tz_sign=-1&tz_label=true&submit=Get+Data
     const T=(getJulianDay()-2451545)/36525.0;
 
     const D = constrain(297.8501921 + 445267.1114034*T - 0.0018819*T*T + 1.0/545868.0*T*T*T - 1.0/113065000.0*T*T*T*T)*RAD; //47.2
@@ -183,7 +185,7 @@ function constrain(angle) {
 
     let k=(1+Math.cos(i))/2;
     k = k.toFixed(2)
+    k = k * 100;
     let illumEl = document.getElementById("illumtext");
     illumEl.innerHTML = `${k}%`;
-
 })();
