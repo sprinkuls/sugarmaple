@@ -14,50 +14,40 @@
         <!-- all of the top titlebar -->
         <div id="titlebar" class="ds">
 
-            <!-- the little 'sugar maple' on the left-->
+            <!-- the little 'sugar maple' -->
             <div id="sitename">
                 <h1 id="sm">sugar maple</h1>
                 <span id="mf"> a <b class="fall">may flowers</b> joint</span>
             </div>
 
-            <!-- some fun little things -->
-            <div id="hearts">
-                <!--<span><b>&lt;3 &lt;3 &lt;3 &lt;3 &lt;3 &lt;3 &lt;3 </b></span>-->
+            <!-- silly face -->
+            <div id="deco">
                 <span>ヽ(⌐■_■)ノ♪♬</span>
             </div>
 
             <!-- all of the little stats accompanying the sm title -->
             <div id="stats" class="">
-                <!-- my orb -->
-                <!--
-                <canvas id="canvas" style="width: 2em; height: 2em;"></canvas>
-                <script>
-                    let canvas = document.getElementById("canvas");
-                    let ctx = canvas.getContext("2d");
-                    ctx.beginPath();
-                    ctx.arc(95, 50, 40, 0, 2 * Math.PI);
-                    ctx.stroke();
-                </script>
-                <span id="moonicon" class="bm">🟢</span>-->
+                <!-- % the moon is illuminated -->
                 <div id="illum" class="">
-                    <span>the moon is <span id="illumtext">??%</span> illuminated!</span>
+                    <span>the moon is <span id="illumtext">??%</span> illuminated &lt;3</span>
                 </div>
 
                 <!-- sunrise/sunset times -->
                 <div id="riseset">
                     <span id="sunrise">sunrise:      ?:?? am</span> <br>
                     <span id="sunset"> sunset: &nbsp;?:?? pm</span> <br>
-                    <!--<span style="font-size: smaller;">in gainesville, fl</span>-->
                     <!-- calculate the actual rise/set times and replace dummy values -->
-                    <script src="riseset.js" defer></script> <!-- -->
                 </div>
+
+                <!-- script that calculates the above stats -->
+                <script src="celestial.js" defer></script>
             </div>
 
         </div>
 
+        <!-- the main content section -->
         <div id="main" class="ds">
             <h1>welcome to my website!</h1>
-            <!--<h2>welcome to my super awesome website!!</h2>-->
             <p>i didn't really figure out what i want to put here yet, but i wanted to
                 kinda carve out the layout a bit so that way <i>something</i> is done.
                 i'm thinking about putting a nav bar on the right or left side of this
