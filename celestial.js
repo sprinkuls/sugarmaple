@@ -14,30 +14,33 @@ const DEG = 180/Math.PI;
 // key if you want to make requests over HTTPS. neocities' csp means you *have*
 // to make requests over HTTPS, so even though the throughput on this one (10k calls/month)
 // is way worse than the 45/min of ip-api, the HTTPS requirement really means that it's 10k/month VS 0/ever
-async function getLatLon() {
-  let response, json;
-  // if something goes wrong, just use GNV's lat/long rather than throwing a fit
-  try {
-    //response = await fetch('https://ipwho.is/');
-    response = await fetch('AHHHHH!!!');
-    json = await response.json();
-  } catch {
-    return ([29.6516344, -82.3248262])
-  }
-
-  // if i run out of calls or something, also fall back to GNV's lat/long
-  if (isNaN(parseFloat(json.latitude)))
-    return ([29.6516344, -82.3248262])
-
-  // yippieeeee things worked
-  return([json.latitude, json.longitude]);
-}
+//
 // also, i know i could use the inbuilt browser functionality for this, but really
 // what is a greater bother than seeing the 'pleaseeee let this random site use your location'
 // popup when you're browsing? so i'm fine with this as a more low key way of doing things
 // maybe what i do is just put a little button that says "give me your location
 // so these get calculated with your latitude/longitude" so u entirely opt in
 // to seeing that stupid popup
+
+// disabled for now cause like it's fine
+async function getLatLon() {
+//  let response, json;
+//  // if something goes wrong, just use GNV's lat/long rather than throwing a fit
+//  try {
+//    response = await fetch('https://ipwho.is/');
+//    json = await response.json();
+//  } catch {
+//    return ([29.6516344, -82.3248262])
+//  }
+//
+//  // if i run out of calls or something, also fall back to GNV's lat/long
+//  if (isNaN(parseFloat(json.latitude)))
+//    return ([29.6516344, -82.3248262])
+//
+//  // yippieeeee things worked
+//  return([json.latitude, json.longitude]);
+  return ([29.6516344, -82.3248262])
+}
 
 function getJulianDay(offset=0) {
   return 2440587.5 + ((Date.now()+(offset*DAY)) / (DAY));

@@ -25,10 +25,7 @@ body {
     color: #96af6e;
     background-color: #f1eee7;
 
-    /*
-    background-image: url("bg.png");
-    */
-    /* messing around with tiling */
+    /* silly tiling background */
     background-image: url("tile.png");
     background-repeat: repeat;
 }
@@ -75,6 +72,10 @@ body {
 
 .ds {
     box-shadow: #f8d2c9 20px 20px;
+}
+
+.comment {
+    color: #b3a380;
 }
 
 #sitename {
@@ -130,12 +131,13 @@ body {
     width: 45em;
 
     /* TEMP */
-    min-height: 20em;
+    /*min-height: 20em;*/
 
     /* center the titlebar */
     margin: 0;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 1em;
 
     /* pad the sides of the bar a lil bit */
     /*padding: 0.5em 1em;*/
@@ -145,6 +147,8 @@ body {
 
 #buttons {
     align-self: center;
+
+    padding-top: 0.75em;
 
     /* make it go to the bottom of the container (#main, in this case) */
     margin-top: auto;
