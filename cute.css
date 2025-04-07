@@ -17,6 +17,11 @@ body {
     min-height: 80vh;
 }
 
+/* me no links blue */
+a {
+    color: #96af6e;
+}
+
 #back {
     font-size: 20px;
     position: absolute;
