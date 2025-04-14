@@ -22,10 +22,10 @@ p {
 }
 
 @font-face {
-    font-family: "Inter";
+    font-family: "InterVariable";
     src:
         local("Inter"),
-        url("./fonts/Inter-VariableFont_opsz\,wght.ttf");
+        url("./fonts/InterVariable.woff2") format("woff2");
 }
 
 html {
