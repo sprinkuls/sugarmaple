@@ -30,11 +30,11 @@ p {
 
 html {
     font-size: 18px;
-
+  font-variant-emoji: text;
 }
 
 body {
-    font-family: 'Inter', 'Arial';
+    font-family: 'Inter', 'Arial', sans-serif;
     /*font-size: 20px;*/
 
     /* i'm having a hard time making up my mind on these */
@@ -46,6 +46,9 @@ body {
     background-color: #f1eee7;
 
     /* silly tiling background */
+    background-image: url("jank.png"), url("tile.png");
+    background-repeat: no-repeat, repeat;
+
     background-image: url("tile.png");
     background-repeat: repeat;
 }
@@ -149,6 +152,7 @@ body {
 
     /* a nice little width */
     width: 45em;
+    min-width: 45em;
 
     /* TEMP */
     /*min-height: 20em;*/
@@ -217,8 +221,13 @@ body {
     */
 }
 
+#fake {
+
+}
+
 #bottombar {
     background-color: #851d2e;
+    background-color: #8e2f4a;
     text-align: center;
     color: #f1eee7;
     position: fixed;
@@ -232,32 +241,12 @@ a:link {
 
 a:visited {
     color: #851d2e;
+    color: #8e2f4a;
 }
 
-/*
-.marquee {
+.sig {
+    color: #8e2f4a;
 }
-
-.marquee span {
-    animation: marquee 5s linear infinite;
-}
-
-@keyframes marquee {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-100%, 0); }
-}
-*/
-/* define the animation */
-/*
-@-webkit-keyframes marquee {
-  0% {
-    -webkit-transform: translate(0, 0);
-  }
-  100% {
-    -webkit-transform: translate(-100%, 0);
-  }
-}
-*/
 
 @keyframes marquee {
   0% {

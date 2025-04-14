@@ -91,7 +91,7 @@ function getRiseSet(lat, long) {
   //console.log("sunDeclin", sunDeclin);
 
   let HAsunrise = DEG*(acos(cos(RAD*90.833)/(cos(RAD*lat)*cos(RAD*(sunDeclin)))-tan(RAD*(lat))*tan(RAD*(sunDeclin))));
-  //console.log("HAsunrise", HAsunrise);
+  console.log("HAsunrise", HAsunrise);
 
   let varY = tan(RAD*(obliqCorr/2))*tan(RAD*(obliqCorr/2));
   //console.log("varY", varY);
@@ -108,7 +108,7 @@ function getRiseSet(lat, long) {
   //console.log("tzOffset", tzOffset);
 
   let solarNoon = (720-4*long-eqOfTime+tzOffset*60)/1440;
-  //console.log("solarNoon", solarNoon);
+  console.log("solarNoon", solarNoon);
   // this is basically the % progression through the day; a value of 0.5
   // means that solar noon is exactly at normal noon (12:00)
   // # of mins = 60 * 24
@@ -138,6 +138,122 @@ function getRiseSet(lat, long) {
   return [riseTime, noonTime, setTime];
 }
 
+function getTwilight(lat, long) {
+  // we're, like, 90% of the way there with getRiseSet
+  // we want the solar elevation angle / solar zenith angle
+
+  // oh but i guess the reason the local time is incorporated is that we're getting
+  // the angle at that time. so we need to instead solve for the time value.
+  // this'll be fun
+  // we know the angle we want for astronomical twilight: 18deg (or 72 if we just use zenith angle)
+  // so just expand all the formulas out until we can solve for time, since it'll be
+  // the only unknown
+  // god i wish i had a sheet of paper right now
+
+  // PHASE 1: TEST AT A CERTAIN TIME (so we can ensure we have the formula right
+  // before we try to reverse it)
+  // convenience
+  let sin = Math.sin;
+  let cos = Math.cos;
+  let tan = Math.tan;
+
+  let asin = Math.asin;
+  let acos = Math.acos;
+
+  let JC = getJulianCentury();
+  //console.log("julianCentury", JC);
+
+  let geomMeanLongSun = (280.46646+JC*(36000.76983+JC*0.0003032)) % 360;
+  //console.log("geomMeanLongSun", geomMeanLongSun);
+
+  let geomMeanAnomSun = 357.52911+JC*(35999.05029-0.0001537*JC);
+  //console.log("geomMeanAnomSun", geomMeanAnomSun);
+
+  let eccentEarthOrbit = 0.016708634-JC*(0.000042037+0.0000001267*JC);
+  //console.log("eccentEarthOrbit", eccentEarthOrbit);
+
+  let sunEqOfCtr = sin(RAD*geomMeanAnomSun)*(1.914602-JC*(0.004817+0.000014*JC))+sin(RAD*2*geomMeanAnomSun)*(0.019993-0.000101*JC)+sin(RAD*3*geomMeanAnomSun)*0.000289;
+  //console.log("sunEqOfCtr", sunEqOfCtr);
+
+  let sunTrueLong = geomMeanLongSun+sunEqOfCtr;
+  //console.log("sunTrueLong", sunTrueLong);
+
+  let sunAppLong = sunTrueLong-0.00569-0.00478*sin(RAD*(125.04-1934.136*JC));
+  //console.log("sunAppLong", sunAppLong);
+
+  let meanObliqEcliptic = 23+(26+((21.448-JC*(46.815+JC*(0.00059-JC*0.001813))))/60)/60;
+  //console.log("meanObliqEcliptic", meanObliqEcliptic);
+
+  let obliqCorr = meanObliqEcliptic+0.00256*cos(RAD*125.04-1934.136*JC);
+  //console.log("obliqCorr", obliqCorr);
+
+  let sunDeclin = DEG*(asin(sin(RAD*obliqCorr)*sin(RAD*sunAppLong)));
+  //console.log("sunDeclin", sunDeclin);
+
+  let HAsunrise = DEG*(acos(cos(RAD*90.833)/(cos(RAD*lat)*cos(RAD*(sunDeclin)))-tan(RAD*(lat))*tan(RAD*(sunDeclin))));
+  //console.log("HAsunrise", HAsunrise);
+
+  let varY = tan(RAD*(obliqCorr/2))*tan(RAD*(obliqCorr/2));
+  //console.log("varY", varY);
+
+  // insane equation
+  let eqOfTime = 4*DEG*(varY*sin(2*RAD*(geomMeanLongSun))-2*eccentEarthOrbit*sin(RAD*(geomMeanAnomSun))+
+                 4*eccentEarthOrbit*varY*sin(RAD*(geomMeanAnomSun))*cos(2*RAD*(geomMeanLongSun))-0.5*
+                 varY*varY*sin(4*RAD*(geomMeanLongSun))-1.25*eccentEarthOrbit*eccentEarthOrbit*sin(2*RAD*(geomMeanAnomSun)));
+  console.log("eqOfTime", eqOfTime);
+
+  // divide by 60 since offset is given in minutes
+  // multiply by -1 because this gives GMT - ${your time zone}
+  let tzOffset = -(new Date()).getTimezoneOffset() / 60;
+  console.log("tzOffset", tzOffset);
+
+  // solar zenith angle depends on lat/long and hour angle
+  // hour angle depends on true solar time
+  // true solar time depends on local time(?), longitude, and eq of time (we have)
+  // so we just need to calculate up to eq of time, then we can get the angle
+
+  // the 'time' variable in the spreadsheets is just what fraction through the
+  // day we are, the way that solar noon was. that makes this a lot easier to think
+  // about.
+
+  // TEMP: calculate the angle at 12:00 noon (1/2 through the day)
+  // we already have a formula for solar noon that converts things to UNIX the
+  // same way, so this won't be any more work on the back end of this process
+  let localTime = 2.0/3.0;
+
+  // ok this works
+  let trueSolarTime = ((localTime*1440) + eqOfTime + (4*long) - (60*tzOffset)) % 1440;
+  console.log("trueSolarTime", trueSolarTime);
+
+  /* =IF(AB2/4<0,AB2/4+180,AB2/4-180)
+   * is this a ternary expression? what?
+   * yeah ok so it's
+   * expression, true clause, false clause
+   *
+   * so
+   * if (tst/4 < 0)
+   *    = tst/4 + 180
+   * else
+   *    = tst/4 - 180
+   */
+
+  // ok this also works
+  let hourAngle = ((trueSolarTime/4) < 0) ? ((trueSolarTime/4) + 180) : ((trueSolarTime/4) - 180);
+  console.log("hourAngle", hourAngle);
+
+  // this too works ok
+  let zenithAngle = DEG * (acos(sin(RAD * lat) * sin(RAD * sunDeclin) + (cos(RAD * lat) * cos(RAD * sunDeclin) * cos(RAD * hourAngle) )));
+  console.log("zenithAngle", zenithAngle);
+
+  let elevationAngle = 90-zenithAngle;
+  console.log("elevationAngle", elevationAngle);
+
+  // so i guess the fun 'todo' is to work alllllll the way back from when i bring
+  // in the local time :-)
+  // how do i even get past the if else?
+
+}
+
 function UNIXtoHHMM(timestamp) {
   const date = new Date(timestamp);
   let mins = date.getMinutes(); if (mins < 10) mins = `0` + mins;
@@ -161,23 +277,13 @@ function constrain(angle) {
     return tmp;
 }
 
-(async () => {
-    const [lat, lon] = await getLatLon();
-    let [rise, _, set] = getRiseSet(lat, lon);
-    rise = UNIXtoHHMM(rise);
-    set = UNIXtoHHMM(set);
-
-    let riseEl = document.getElementById("sunrise");
-    let setEl = document.getElementById("sunset");
-    riseEl.innerHTML = `sunrise: ${rise}`;
-    setEl.innerHTML = `sunset:&nbsp; ${set}`;
-
+function getMoonIllum(offset=0) {
     // calculate illumination
     // borrowed from https://celestialprogramming.com/meeus-illuminated_fraction_of_the_moon.html
     // (this one also takes from astronomical algorithms, thank you jean meeus)
     // reference for accuracy of data below:
     // https://aa.usno.navy.mil/calculated/moon/fraction?year=2025&task=12&tz=5&tz_sign=-1&tz_label=true&submit=Get+Data
-    const T=(getJulianDay()-2451545)/36525.0;
+    const T=(getJulianDay(offset)-2451545)/36525.0;
 
     const D = constrain(297.8501921 + 445267.1114034*T - 0.0018819*T*T + 1.0/545868.0*T*T*T - 1.0/113065000.0*T*T*T*T)*RAD; //47.2
     const M = constrain(357.5291092 + 35999.0502909*T - 0.0001536*T*T + 1.0/24490000.0*T*T*T)*RAD; //47.3
@@ -189,6 +295,66 @@ function constrain(angle) {
     let k=(1+Math.cos(i))/2;
     k = k.toFixed(2)
     k = k * 100;
+    return k;
+}
+
+// this is like, not a really precise way of doing things, but the meeus calculations
+// were a liiiiiitle too much for me at the moment so i'm doing this the lazy way
+// TODO: use the real formulas
+function getMoonPhase(julianDate) {
+    // offset from known new moon (midnight jan 6 2000)
+    let diff = julianDate - 2451549.5;
+    // lunar months average 29.53 days, so divide days elapsed by 29.53 to get
+    // how many cycles we've moved through
+    let newMoons = diff / 29.53;
+    // get the decimal part of this to see how far we are through the current cycle
+    let fraction = newMoons - Math.floor(newMoons);
+
+    // based on that amount, assign the phase (roughly)
+    // these emojis are the opposite of what they should be
+    // (first quarter vs third, waning gibbous instead of waxing crescent)
+    // because i'm displaying white text rather than black
+    if (fraction < 0.0625) return '🌕︎ new moon';
+    else if (fraction < 0.1875) return '🌖︎ waxing crescent';
+    else if (fraction < 0.3125) return '🌗︎ first quarter';
+    else if (fraction < 0.4375) return '🌘︎ waxing gibbous';
+    else if (fraction < 0.5625) return '🌑︎ full moon';
+    else if (fraction < 0.6875) return '🌒︎ waning gibbous';
+    else if (fraction < 0.8125) return '🌓︎ last quarter';
+    else if (fraction < 0.9375) return '🌔︎ waning crescent';
+    else return '🌕︎ new moon';
+}
+
+// where we actually run code
+(async () => {
+    // store values for future (re)use
+    const [lat, lon] = await getLatLon();
+    let [rise, noon, set] = getRiseSet(lat, lon);
+    rise = UNIXtoHHMM(rise);
+    noon = UNIXtoHHMM(noon);
+    set = UNIXtoHHMM(set);
+
+    let illumination = getMoonIllum(0);
+    let phase = getMoonPhase(getJulianDay());
+    let twilight = getTwilight(lat, lon);
+
+    let riseEl = document.getElementById("sunrise");
+    let setEl = document.getElementById("sunset");
+    riseEl.innerHTML = `sunrise: ${rise}`;
+    setEl.innerHTML = `sunset:&nbsp; ${set}`;
+
     let illumEl = document.getElementById("illumtext");
-    illumEl.innerHTML = `${k}%`;
+    illumEl.innerHTML = `${illumination}%`;
+
+    ////////// for the bottom bar
+    let barsunEl = document.getElementById("sun");
+    barsunEl.innerHTML = `🟆 ↑${rise} - ${set}↓`;
+
+    let barmoonEl = document.getElementById("moon");
+    barmoonEl.innerHTML = `︎${phase}, ${illumination}︎% illuminated `;
+
+    //TODO: finish writing calculations for this
+    let twilightEl = document.getElementById("twilight");
+    //twilightEl.innerHTML = `${twilight}`;
+    twilightEl.innerHTML = `WIP`;
 })();

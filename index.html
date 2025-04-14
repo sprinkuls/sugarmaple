@@ -7,17 +7,14 @@
         <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="icon" href="favicon.png"/>
 
+        <!-- load inter
+            https://web.dev/articles/codelab-preload-web-fonts
+        -->
+        <link rel="preload" href="fonts/Inter-VariableFont_opsz,wght.ttf" as="font" type="font/ttf" crossorigin>
+
         <title>sugar maple</title>
     </head>
     <body>
-
-        <!-- uhhhh svg -->
-
-        <!--
-        <svg>
-            <rect id="guh" x="0" y="0" width="100" height="100"></rect>
-        </svg>
-        -->
 
         <!-- all of the top titlebar -->
         <div id="titlebar" class="ds">
@@ -55,7 +52,7 @@
 
       <div class="container">
         <!-- TESTING !!! -->
-        <div class="sidebar">
+        <div class="sidebar" id="fake">
         <!-- i'm not good at css/html. but this somehow still
              seems to be the least messy way to do this. -->
         </div>
@@ -123,13 +120,21 @@
                 it actually kinda breaks things if you splitscreen this page
                 so i'll fix that soon
                 <br>
-                <span style="color:#c37865">o(╥﹏╥)o .｡*+</span>
+                <span style="color:#c37865">o(╥﹏╥)o .｡*+</span> <!--lazyyyyy-->
         </div>
       </div>
 
         <div id="bottombar" >
+            <!--
             <span>mmmm i wanna put more stats than just sun rise/set and moon
             illum % here... maybe next full/new moon and name of phase? i got room</span>
+            -->
+            <span id="sun"></span>
+            //
+            <span id="moon"></span>
+            //
+            <span id="twilight"></span>
+            <span id="nextfull"></span>
         </div>
     </body>
 </html>
