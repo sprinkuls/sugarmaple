@@ -138,20 +138,10 @@ function getRiseSet(lat, long) {
   return [riseTime, noonTime, setTime];
 }
 
+// essentially the same code as in getRiseSet(), as sunrise/sunset
+// happens when the sun is in line with the horizon (90 degrees)
+// and twilight when it's below it (108 degrees)
 function getTwilight(lat, long) {
-  // we're, like, 90% of the way there with getRiseSet
-  // we want the solar elevation angle / solar zenith angle
-
-  // oh but i guess the reason the local time is incorporated is that we're getting
-  // the angle at that time. so we need to instead solve for the time value.
-  // this'll be fun
-  // we know the angle we want for astronomical twilight: 18deg (or 72 if we just use zenith angle)
-  // so just expand all the formulas out until we can solve for time, since it'll be
-  // the only unknown
-  // god i wish i had a sheet of paper right now
-
-  // PHASE 1: TEST AT A CERTAIN TIME (so we can ensure we have the formula right
-  // before we try to reverse it)
   // convenience
   let sin = Math.sin;
   let cos = Math.cos;
@@ -187,11 +177,12 @@ function getTwilight(lat, long) {
   let obliqCorr = meanObliqEcliptic+0.00256*cos(RAD*125.04-1934.136*JC);
   //console.log("obliqCorr", obliqCorr);
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
   let sunDeclin = DEG*(asin(sin(RAD*obliqCorr)*sin(RAD*sunAppLong)));
   //console.log("sunDeclin", sunDeclin);
 
   let HAsunrise = DEG*(acos(cos(RAD*90.833)/(cos(RAD*lat)*cos(RAD*(sunDeclin)))-tan(RAD*(lat))*tan(RAD*(sunDeclin))));
-  //console.log("HAsunrise", HAsunrise);
+  console.log("HAsunrise", HAsunrise);
 
   let varY = tan(RAD*(obliqCorr/2))*tan(RAD*(obliqCorr/2));
   //console.log("varY", varY);
@@ -200,57 +191,56 @@ function getTwilight(lat, long) {
   let eqOfTime = 4*DEG*(varY*sin(2*RAD*(geomMeanLongSun))-2*eccentEarthOrbit*sin(RAD*(geomMeanAnomSun))+
                  4*eccentEarthOrbit*varY*sin(RAD*(geomMeanAnomSun))*cos(2*RAD*(geomMeanLongSun))-0.5*
                  varY*varY*sin(4*RAD*(geomMeanLongSun))-1.25*eccentEarthOrbit*eccentEarthOrbit*sin(2*RAD*(geomMeanAnomSun)));
-  console.log("eqOfTime", eqOfTime);
+  //console.log("eqOfTime", eqOfTime);
 
   // divide by 60 since offset is given in minutes
   // multiply by -1 because this gives GMT - ${your time zone}
   let tzOffset = -(new Date()).getTimezoneOffset() / 60;
-  console.log("tzOffset", tzOffset);
+  //console.log("tzOffset", tzOffset);
 
-  // solar zenith angle depends on lat/long and hour angle
-  // hour angle depends on true solar time
-  // true solar time depends on local time(?), longitude, and eq of time (we have)
-  // so we just need to calculate up to eq of time, then we can get the angle
+  let solarNoon = (720-4*long-eqOfTime+tzOffset*60)/1440;
+  console.log("solarNoon", solarNoon);
+  // this is basically the % progression through the day; a value of 0.5
+  // means that solar noon is exactly at normal noon (12:00)
+  // # of mins = 60 * 24
+  // # of mins through the day
+  let mins = solarNoon * (60 * 24);
+  let hrs = Math.floor(mins/60);
+  mins = Math.floor(mins % 60);
+  //console.log("solar noon", hrs, mins);
 
-  // the 'time' variable in the spreadsheets is just what fraction through the
-  // day we are, the way that solar noon was. that makes this a lot easier to think
-  // about.
 
-  // TEMP: calculate the angle at 12:00 noon (1/2 through the day)
-  // we already have a formula for solar noon that converts things to UNIX the
-  // same way, so this won't be any more work on the back end of this process
-  let localTime = 2.0/3.0;
 
-  // ok this works
-  let trueSolarTime = ((localTime*1440) + eqOfTime + (4*long) - (60*tzOffset)) % 1440;
-  console.log("trueSolarTime", trueSolarTime);
+  //might need to radianify this thing
+  let theta = 6;
+  //let hourAngle = /*DEG*acos(RAD**/(cos(RAD*theta) - (sin(lat*RAD) * sin(RAD*sunDeclin))) / (cos(lat*RAD) * cos(sunDeclin*RAD));
 
-  /* =IF(AB2/4<0,AB2/4+180,AB2/4-180)
-   * is this a ternary expression? what?
-   * yeah ok so it's
-   * expression, true clause, false clause
-   *
-   * so
-   * if (tst/4 < 0)
-   *    = tst/4 + 180
-   * else
-   *    = tst/4 - 180
-   */
-
-  // ok this also works
-  let hourAngle = ((trueSolarTime/4) < 0) ? ((trueSolarTime/4) + 180) : ((trueSolarTime/4) - 180);
+  let hourAngle = DEG*(acos(cos(RAD*108)/(cos(RAD*lat)*cos(RAD*(sunDeclin)))-tan(RAD*(lat))*tan(RAD*(sunDeclin))));
   console.log("hourAngle", hourAngle);
+  //let offset = hourAngle/15.0;
+  let offset = hourAngle*4/1440;
 
-  // this too works ok
-  let zenithAngle = DEG * (acos(sin(RAD * lat) * sin(RAD * sunDeclin) + (cos(RAD * lat) * cos(RAD * sunDeclin) * cos(RAD * hourAngle) )));
-  console.log("zenithAngle", zenithAngle);
+  let twilightMorning = solarNoon-offset;
+  let twilightEvening = solarNoon+offset;
 
-  let elevationAngle = 90-zenithAngle;
-  console.log("elevationAngle", elevationAngle);
+  console.log("solarNoon", solarNoon);
+  console.log("twilightMorning", twilightMorning);
+  console.log("twilightEvening", twilightEvening);
 
-  // so i guess the fun 'todo' is to work alllllll the way back from when i bring
-  // in the local time :-)
-  // how do i even get past the if else?
+  let today = new Date();
+  today.setHours(0,0,0,0);
+
+  let morn = DAY * twilightMorning;
+  let eve = DAY * twilightEvening;
+
+  let mt = today.valueOf() + morn;
+  let et = today.valueOf() + eve;
+
+  // EHHEHEHEHEHEHEHEHEHEEEE
+  console.log("morning twilight:", UNIXtoHHMM(mt));
+  console.log("evening twilight:", UNIXtoHHMM(et));
+
+  return [mt, et];
 
 }
 
@@ -336,7 +326,9 @@ function getMoonPhase(julianDate) {
 
     let illumination = getMoonIllum(0);
     let phase = getMoonPhase(getJulianDay());
-    let twilight = getTwilight(lat, lon);
+    let [mt, et] = getTwilight(lat, lon);
+    mt = UNIXtoHHMM(mt);
+    et = UNIXtoHHMM(et);
 
     let riseEl = document.getElementById("sunrise");
     let setEl = document.getElementById("sunset");
@@ -355,6 +347,5 @@ function getMoonPhase(julianDate) {
 
     //TODO: finish writing calculations for this
     let twilightEl = document.getElementById("twilight");
-    //twilightEl.innerHTML = `${twilight}`;
-    twilightEl.innerHTML = `WIP`;
+    twilightEl.innerHTML = `dawn ${mt}, dusk ${et}`;
 })();
