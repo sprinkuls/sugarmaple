@@ -42,8 +42,15 @@ async function getLatLon() {
   return ([29.6516344, -82.3248262])
 }
 
+// get the julian day, offset a certain number of days from the current day
+// i could probably change this to just take a UNIX stamp instead, but like it's fiiiiine
 function getJulianDay(offset=0) {
   return 2440587.5 + ((Date.now()+(offset*DAY)) / (DAY));
+}
+
+// get the UNIX ts from a JDE
+function getUNIX(JDE) {
+  return (JDE - 2440587.5) * DAY;
 }
 
 function getJulianCentury(offset=0) {
@@ -244,6 +251,36 @@ function getTwilight(lat, long) {
 
 }
 
+// find the unix ts for the next new moon
+function nextNewFullMoon() {
+  const synodic = 29.53059;
+  const JDEnew = 2451550.09766;
+  const JDEfull = JDEnew + (synodic/2.0); // could find a real val but oh well
+  const today = getJulianDay();
+
+  let k = Math.floor((today - JDEnew) / synodic) + 1;
+  let T = k / 1236.85;
+  let T2 = T*T;
+  let T3 = T2*T;
+  let T4 = T3*T;
+  let newmoon = JDEnew + (synodic*k) + (0.0001337 * T2) - (0.000000150 * T3) + 0.00000000073 * T4;
+
+  k = Math.floor((today - JDEfull) / synodic) + 1;
+  T = k / 1236.85;
+  T2 = T*T;
+  T3 = T2*T;
+  T4 = T3*T;
+  let fullmoon = JDEfull + (synodic*k) + (0.0001337 * T2) - (0.000000150 * T3) + 0.00000000073 * T4;
+
+  // hmmmm need to find the next time that it's midnight after these dates, and
+  // then use that. cause otherwise you'll see 'apr 12' and not realize that apr 12
+  // has a new moon that starts at like 4am and you'll go out the night of the
+  // or is it not an issue? idk i'm not printing the hour out
+
+  return [getUNIX(newmoon), getUNIX(fullmoon)];
+}
+
+// lazy girl function
 function UNIXtoHHMM(timestamp) {
   const date = new Date(timestamp);
   let mins = date.getMinutes(); if (mins < 10) mins = `0` + mins;
@@ -258,6 +295,17 @@ function UNIXtoHHMM(timestamp) {
     mins += ' am';
   }
   return `${hrs}:${mins}`;
+}
+
+// lazy girl function x2
+function miniformat(UNIX) {
+  const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                  'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  let date = new Date(UNIX);
+  const month = months[date.getMonth()];
+  const daynr = date.getDate();
+
+  return `${month} ${daynr}`;
 }
 
 // borrowed from https://celestialprogramming.com/meeus-illuminated_fraction_of_the_moon.html
@@ -330,6 +378,11 @@ function getMoonPhase(julianDate) {
     mt = UNIXtoHHMM(mt);
     et = UNIXtoHHMM(et);
 
+    let [newmoon, fullmoon] = nextNewFullMoon();
+    miniformat(newmoon);
+    newmoon = new Date(newmoon);
+    fullmoon = new Date(fullmoon);
+
     let riseEl = document.getElementById("sunrise");
     let setEl = document.getElementById("sunset");
     riseEl.innerHTML = `sunrise: ${rise}`;
@@ -338,14 +391,17 @@ function getMoonPhase(julianDate) {
     let illumEl = document.getElementById("illumtext");
     illumEl.innerHTML = `${illumination}%`;
 
-    ////////// for the bottom bar
+    ////////// for the bottom bar //////////
     let barsunEl = document.getElementById("sun");
     barsunEl.innerHTML = `🟆 ↑${rise} - ${set}↓`;
 
     let barmoonEl = document.getElementById("moon");
     barmoonEl.innerHTML = `︎${phase}, ${illumination}︎% illuminated `;
 
-    //TODO: finish writing calculations for this
     let twilightEl = document.getElementById("twilight");
     twilightEl.innerHTML = `dawn ${mt}, dusk ${et}`;
+
+    let majorEl = document.getElementById("nextmajor");
+    let majorfmt = `next 🌕︎: ${miniformat(newmoon)}, next 🌑︎: ${miniformat(fullmoon)}`;
+    majorEl.innerHTML = majorfmt;
 })();

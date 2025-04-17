@@ -28,13 +28,20 @@ p {
         url("./fonts/InterVariable.woff2") format("woff2");
 }
 
+@font-face {
+    font-family: "DejaVu Sans";
+    src:
+        local("DejaVu Sans"),
+        url("./fonts/dejavu-sans-webfont.woff2") format("woff2");
+}
+
 html {
     font-size: 18px;
   font-variant-emoji: text;
 }
 
 body {
-    font-family: 'Inter', 'Arial', sans-serif;
+    font-family: 'Inter', 'Arial', 'DejaVu Sans', sans-serif;
     /*font-size: 20px;*/
 
     /* i'm having a hard time making up my mind on these */
