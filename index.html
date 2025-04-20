@@ -4,7 +4,6 @@
 
         <meta charset="utf-8">
 
-        <link rel="stylesheet" type="text/css" href="style.css">
         <link rel="icon" href="favicon.png"/>
 
         <!-- load inter
@@ -12,15 +11,25 @@
         -->
         <!--
         <link rel="preload" href="fonts/Inter-VariableFont_opsz,wght.ttf" as="font" type="font/ttf" crossorigin>
-        -->
-        <link rel="preload" href="fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
         <!-- TODO: modify inter file and just add the glyphs i want to it rather
-                   than load an entire other font for them lol -->
-        <link rel="preload" href="fonts/dejavu-sans-webfont.woff2" as="font" type="font/woff2" crossorigin>
+                   than load an entire other font for them lol
 
+        <link rel="preload" href="fonts/dejavu-sans-webfont.woff2" as="font" type="font/woff2" crossorigin>
+        -->
+
+        <link rel="preload" href="fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+        <link rel="stylesheet" type="text/css" href="style.css">
         <title>sugar maple</title>
     </head>
     <body>
+        <!--
+        <div id="sideways" class="zany" style="opacity: 50%;">
+            <span>gleeble</span>
+        </div>
+        <div id="sideways">
+            <span>gleeble</span>
+        </div>
+        -->
 
         <!-- all of the top titlebar -->
         <div id="titlebar" class="ds">
@@ -137,9 +146,9 @@
             -->
             <span id="sun"></span>
             //
-            <span id="moon"></span>
-            //
             <span id="twilight"></span>
+            //
+            <span id="moon"></span>
             //
             <span id="nextmajor"></span>
         </div>

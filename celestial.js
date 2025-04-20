@@ -352,15 +352,24 @@ function getMoonPhase(julianDate) {
     // these emojis are the opposite of what they should be
     // (first quarter vs third, waning gibbous instead of waxing crescent)
     // because i'm displaying white text rather than black
-    if (fraction < 0.0625) return '🌕︎ new moon';
-    else if (fraction < 0.1875) return '🌖︎ waxing crescent';
-    else if (fraction < 0.3125) return '🌗︎ first quarter';
-    else if (fraction < 0.4375) return '🌘︎ waxing gibbous';
-    else if (fraction < 0.5625) return '🌑︎ full moon';
-    else if (fraction < 0.6875) return '🌒︎ waning gibbous';
-    else if (fraction < 0.8125) return '🌓︎ last quarter';
-    else if (fraction < 0.9375) return '🌔︎ waning crescent';
-    else return '🌕︎ new moon';
+    ///if (fraction < 0.0625) return '🌕︎ new moon';
+    ///else if (fraction < 0.1875) return '🌖︎ waxing crescent';
+    ///else if (fraction < 0.3125) return '🌗︎ first quarter';
+    ///else if (fraction < 0.4375) return '🌘︎ waxing gibbous';
+    ///else if (fraction < 0.5625) return '🌑︎ full moon';
+    ///else if (fraction < 0.6875) return '🌒︎ waning gibbous';
+    ///else if (fraction < 0.8125) return '🌓︎ last quarter';
+    ///else if (fraction < 0.9375) return '🌔︎ waning crescent';
+    ///else return '🌕︎ new moon';
+    if (fraction < 0.0625) return 'new moon';
+    else if (fraction < 0.1875) return 'waxing crescent';
+    else if (fraction < 0.3125) return 'first quarter';
+    else if (fraction < 0.4375) return 'waxing gibbous';
+    else if (fraction < 0.5625) return 'full moon';
+    else if (fraction < 0.6875) return 'waning gibbous';
+    else if (fraction < 0.8125) return 'last quarter';
+    else if (fraction < 0.9375) return 'waning crescent';
+    else return 'new moon';
 }
 
 // where we actually run code
@@ -393,7 +402,7 @@ function getMoonPhase(julianDate) {
 
     ////////// for the bottom bar //////////
     let barsunEl = document.getElementById("sun");
-    barsunEl.innerHTML = `🟆 ↑${rise} - ${set}↓`;
+    barsunEl.innerHTML = `sun ↑${rise} - ${set}↓`;
 
     let barmoonEl = document.getElementById("moon");
     barmoonEl.innerHTML = `︎${phase}, ${illumination}︎% illuminated `;
@@ -403,5 +412,6 @@ function getMoonPhase(julianDate) {
 
     let majorEl = document.getElementById("nextmajor");
     let majorfmt = `next 🌕︎: ${miniformat(newmoon)}, next 🌑︎: ${miniformat(fullmoon)}`;
+    majorfmt = `next new moon: ${miniformat(newmoon)}; full: ${miniformat(fullmoon)}`;
     majorEl.innerHTML = majorfmt;
 })();

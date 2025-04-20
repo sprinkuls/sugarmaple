@@ -22,10 +22,17 @@ p {
 }
 
 @font-face {
-    font-family: "InterVariable";
+    font-family: "Inter";
     src:
         local("Inter"),
         url("./fonts/InterVariable.woff2") format("woff2");
+}
+
+/*
+@font-face {
+    font-family: "Averia Libre";
+    src:
+        url("fonts/AveriaLibre-Regular.ttf") format("truetype");
 }
 
 @font-face {
@@ -34,6 +41,7 @@ p {
         local("DejaVu Sans"),
         url("./fonts/dejavu-sans-webfont.woff2") format("woff2");
 }
+*/
 
 html {
     font-size: 18px;
@@ -42,7 +50,10 @@ html {
 
 body {
     font-family: 'Inter', 'Arial', 'DejaVu Sans', sans-serif;
+    /*
+    */
     /*font-size: 20px;*/
+    font-weight: 450;
 
     /* i'm having a hard time making up my mind on these */
     /*
@@ -53,11 +64,15 @@ body {
     background-color: #f1eee7;
 
     /* silly tiling background */
-    background-image: url("jank.png"), url("tile.png");
+    background-image: url("testwine.png"), url("tile.png");
     background-repeat: no-repeat, repeat;
+    /*background-position: 0% 100%, 0% 0%;*/
 
     background-image: url("tile.png");
     background-repeat: repeat;
+    background-position: 10% 10%;
+    /*
+    */
 }
 
 #titlebar {
@@ -75,6 +90,7 @@ body {
 
     /* offset stuff below*/
     margin-bottom: 2em;
+    margin-top: .5em;
 
     /* a nice little width */
     width: 45em;
@@ -94,9 +110,8 @@ body {
     border-top: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    */
     padding-top: 1em;
-    margin-top: -1.2em;
+    */
     /* https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow */
 }
 
@@ -279,4 +294,53 @@ a:visited {
 }
 .marquee span:hover {
   animation-play-state: paused;
+}
+
+/* hide stuff when the screen is small */
+@media (max-width: 1200px) {
+    #sideways {
+        display: none;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+}
+
+/* try to do stuff for phones? idk */
+@media (max-width: 500px) {
+    #main {
+        font-size: larger;
+    }
+}
+
+.zany {
+    text-shadow:
+        -4px -4px 0 #00ff00,
+         4px -4px 0 #00ffff,
+        -4px  4px 0 #ffff00,
+         4px  4px 0 #ff00ff;
+}
+
+#sideways {
+    color: #8e2f4a;
+    span {
+        /*background-color: #f1eee7;
+            */
+        /* ok this is actually kinda cool, saving for later */
+        /*
+        text-shadow:
+            -4px -4px 0 #0f0,
+             4px -4px 0 #0f0,
+            -4px  4px 0 #0f0,
+             4px  4px 0 #0f0;
+        */
+    }
+    margin-left: 0%;
+    z-index: -1;
+    font-size: 5em;
+    position: fixed;
+    writing-mode: sideways-lr;
+    margin-bottom: 1em;
 }
