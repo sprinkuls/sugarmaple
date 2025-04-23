@@ -331,8 +331,18 @@ function getMoonIllum(offset=0) {
     const i=constrain(180 - D*180/Math.PI - 6.289 * Math.sin(Mp) + 2.1 * Math.sin(M) -1.274 * Math.sin(2*D - Mp) -0.658 * Math.sin(2*D) -0.214 * Math.sin(2*Mp) -0.11 * Math.sin(D))*RAD;
 
     let k=(1+Math.cos(i))/2;
+    // make it like, x.xx only not x.xxxxxxxxx
     k = k.toFixed(2)
+    // lazy drunk way to ensure that floating point doesn't fuck with my numbers
+    // (ie, '0.28' could actually become '28.000000000000004' after multiplication)
+    // uhhhh so make it a string and see if there's a decimal point!
+    // i would've done a substr for the first two places but yknow sometimes it
+    // be 100% illuminated and that "solution" would cause 100% to read as 10%
     k = k * 100;
+    k = k.toString();
+    let index = k.indexOf(".");
+    if (index != -1)
+        k = k.substr(0, index);
     return k;
 }
 
