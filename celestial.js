@@ -390,38 +390,48 @@ function alsBday() {
     // current time
     let ct = new Date();
     let year = ct.getFullYear();
-    //ct = new Date(year, 3, 30, 7, 11);
     let bday = new Date(year, 3, 29, 7, 11);
 
-    console.log(bday.toString());
-    if (bday.getMonth() == ct.getMonth && bday.getDate()) {
-        console.log("it's al's bday!!!!!");
+    let alEl = document.getElementById("al");
+
+    //console.log(bday.toString());
+    if ((bday.getMonth() == ct.getMonth()) && (bday.getDate() == ct.getDate())) {
+        alEl.innerHTML = `it's al's bday!!!!!`;
     }
     // before bday
-    if (ct.getTime() < bday.getTime()) {
+    else if (ct.getTime() < bday.getTime()) {
         // find days until then
         let ecks = bday.getTime() - ct.getTime(); // diff from the times in unix ms
 
         let days = Math.floor(ecks / DAY);
+        days = days.toString();
+        if (days == '1') days = 'is 1 day'; else days = `are ${days} days`;
         let remainder = ecks % DAY; // part of a day left over
 
         let hours = Math.floor(remainder / HOUR);
+        hours = hours.toString();
+        if (hours == '1') hours = `1 hour`; else hours = `${hours} hours`;
         remainder = remainder % HOUR;
 
         let minutes = Math.floor(remainder / MINUTE);
+        minutes = minutes.toString();
+        if (minutes == '1') minutes = `1 minute`; else minutes = `${minutes} minutes`;
         remainder = remainder % MINUTE;
 
         let seconds = Math.floor(remainder / SECOND);
+        seconds = seconds.toString();
+        if (seconds == '1') seconds = `1 second`; else seconds = `${seconds} seconds`;
+
 
         let alEl = document.getElementById("al");
-        alEl.innerHTML = `there are ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds until al's bday`;
+        alEl.innerHTML = `there ${days}, ${hours}, ${minutes}, and ${seconds} until al's bday`;
         //console.log(`there are ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds until al's bday`);
 
     } else { // after bday
         // find the date next year
         let nextbday = new Date((year+1), 3, 29, 7, 11);
         // find days until then
-        let ecks = ct.getTime() - bday.getTime(); // diff from the times in unix ms
+        let ecks = nextbday.getTime() - ct.getTime(); // diff from the times in unix ms
 
         let days = Math.floor(ecks / DAY);
         let remainder = ecks % DAY; // part of a day left over
@@ -434,7 +444,6 @@ function alsBday() {
 
         let seconds = Math.floor(remainder / SECOND);
 
-        let alEl = document.getElementById("al");
         alEl.innerHTML = `there are ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds until al's bday`;
     }
 }
