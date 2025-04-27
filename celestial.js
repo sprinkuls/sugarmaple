@@ -4,8 +4,10 @@
 console.log("<|:3c");
 
 // convenient definitions in UNIX millis
-const HOUR = 3600000;
 const DAY = 86400000;
+const HOUR = 3600000;
+const MINUTE = HOUR/60;
+const SECOND = MINUTE/60;
 
 const RAD = Math.PI/180;
 const DEG = 180/Math.PI;
@@ -381,6 +383,62 @@ function getMoonPhase(julianDate) {
     else if (fraction < 0.9375) return 'waning crescent';
     else return 'new moon';
 }
+
+function alsBday() {
+    //7:11 am est apr 29
+
+    // current time
+    let ct = new Date();
+    let year = ct.getFullYear();
+    //ct = new Date(year, 3, 30, 7, 11);
+    let bday = new Date(year, 3, 29, 7, 11);
+
+    console.log(bday.toString());
+    if (bday.getMonth() == ct.getMonth && bday.getDate()) {
+        console.log("it's al's bday!!!!!");
+    }
+    // before bday
+    if (ct.getTime() < bday.getTime()) {
+        // find days until then
+        let ecks = bday.getTime() - ct.getTime(); // diff from the times in unix ms
+
+        let days = Math.floor(ecks / DAY);
+        let remainder = ecks % DAY; // part of a day left over
+
+        let hours = Math.floor(remainder / HOUR);
+        remainder = remainder % HOUR;
+
+        let minutes = Math.floor(remainder / MINUTE);
+        remainder = remainder % MINUTE;
+
+        let seconds = Math.floor(remainder / SECOND);
+
+        let alEl = document.getElementById("al");
+        alEl.innerHTML = `there are ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds until al's bday`;
+        //console.log(`there are ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds until al's bday`);
+
+    } else { // after bday
+        // find the date next year
+        let nextbday = new Date((year+1), 3, 29, 7, 11);
+        // find days until then
+        let ecks = ct.getTime() - bday.getTime(); // diff from the times in unix ms
+
+        let days = Math.floor(ecks / DAY);
+        let remainder = ecks % DAY; // part of a day left over
+
+        let hours = Math.floor(remainder / HOUR);
+        remainder = remainder % HOUR;
+
+        let minutes = Math.floor(remainder / MINUTE);
+        remainder = remainder % MINUTE;
+
+        let seconds = Math.floor(remainder / SECOND);
+
+        let alEl = document.getElementById("al");
+        alEl.innerHTML = `there are ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds until al's bday`;
+    }
+}
+alsBday(); window.onload = setInterval(alsBday, 1000);
 
 // where we actually run code
 (async () => {
