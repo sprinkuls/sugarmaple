@@ -447,6 +447,7 @@ function alsBday() {
         alEl.innerHTML = `there are ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds until al's bday`;
     }
 }
+// run the thingy
 alsBday(); window.onload = setInterval(alsBday, 1000);
 
 // where we actually run code
