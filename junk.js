@@ -38,6 +38,7 @@ html.style.margin = "0";
 
 body.style.color = mainColor;
 body.style.backgroundColor = "black";
+body.style.backgroundColor = "rgb(0, 0, 0)";
 
 body.style.fontFamily = "Consolas, monospace";
 body.style.fontSize = "20px";
@@ -69,17 +70,29 @@ function draw() {
   ctx.canvas.height = height;
 
 
-  let c1 = new RGBA(255, 255, 255, 0.7);
-  let c2 = new RGBA(128, 128, 128, 0.5);
+  let c1 = new RGBA(255, 255, 255, 1);
+  let c2 = new RGBA(128, 128, 128, 0.3);
   let c3 = new RGBA(0, 0, 0, 0);
-  //drawOrb(ctx, c1, c2, c3, width/2, height/2, 10, false);
-  // do it randomly
-  let TMP = 20;
-  for (i = 0; i < 300; i++) {
+
+  // draw stars randomly
+  for (i = 0; i < 500; i++) {
     let x = random(0, width);
     let y = random(0, height);
-    let rad = random(1, 10);
-      drawOrb(ctx, c1, c2, c3, x, y, rad, false);
+    // TODO: think of a good way to distribute the radii non-uniformly (more 
+    // stars with a small radius, less with a larger one)
+    // this is especially because an increase in radius leads to a quadratic 
+    // increase in area (the r^2 in [pi]r^2)
+    let radius = random(1, 8);
+    // TEST: a new way to calculate radius? WIP.
+    let rand = Math.random(); // a float value from 0-1
+    rand = rand * rand * rand; // lazy way to skew to lower values
+    let min = 2;
+    let max = 8; 
+    radius = Math.floor(rand * (max - min + 1) + min);
+    // TODO: randomly tweak the colors of the stars so everything isn't 
+    // a perfect uniform white (since that's just not what the sky looks like)
+    // oh, and make sure not to make them green
+    drawOrb(ctx, c1, c2, c3, x, y, radius, false);
   }
   let oc1 = new RGBA(0, 255, 0,  1);
   let oc2 = new RGBA(0, 128, 0,  1);
@@ -147,18 +160,3 @@ function drawCircle(ctx) {
 
 // Run the function once, and re-run it on resize
 draw(); window.addEventListener('resize', draw);
-
-// I hate this because I'm not allowed to call it a struct it is a CLASS
-// also I HATE WEAK TYPING LET ME JUST CALL SOMETHING A FUCKING NUMBER OR 
-// ANYTHING THAT ISN'T JUST A VARIABLE NAME UUUUUUGH
-// ok so rgb is 0-255
-// and A is 0.1
-// that's fine it's all fine it's fine
-// oh, also, no overloading class constructors. why? what is wrong with you?
-
-// uuuuugh
-let whatever = new RGBA(0, 255, 0, 1);
-console.log(whatever.g);
-whatever.r = whatever.g / 2 ;
-console.log(whatever.r);
-console.log(whatever.toStr());

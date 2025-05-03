@@ -4,9 +4,6 @@ html, body {
     height: 100%;
     margin: 0;
 
-    font-family: 'Courier', monospace;
-    font-size: 1.25em;
-    color: lavender;
     background-color: black;
     box-sizing: border-box;
 }
