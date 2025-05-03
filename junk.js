@@ -21,6 +21,13 @@ function random(min, max) {
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); 
 }
 
+function mini(a, b) {
+  return ((a < b) ? a : b);
+}
+function maxi(a, b) {
+  return ((a > b) ? a : b);
+}
+
 // Constants
 const mainColor = "#0F0"
 const body = document.body;
@@ -51,11 +58,11 @@ canvas.style.boxSizing = "border-box";
 canvas.style.boxShadow = `inset 0 0 2.5em ${mainColor}`;
 canvas.style.zIndex = "-1"; // So the text stays above the background
 
-// Style the text in the doc (this would probably be nicer to do with CSS)
+//// Style the text in the doc (this would probably be nicer to do with CSS)
 let tc = document.getElementById("textcontainer");
 tc.style.padding = "2.5rem";
 tc.style.textAlign = "center";
-tc.style.fontSize = "larger";
+//tc.style.fontSize = "larger";
 let text = document.getElementById("text");
 text.style.backgroundColor = "black";
 
@@ -75,7 +82,7 @@ function draw() {
   let c3 = new RGBA(0, 0, 0, 0);
 
   // draw stars randomly
-  for (i = 0; i < 500; i++) {
+  for (i = 0; i < 1000; i++) {
     let x = random(0, width);
     let y = random(0, height);
     // TODO: think of a good way to distribute the radii non-uniformly (more 
@@ -85,19 +92,43 @@ function draw() {
     let radius = random(1, 8);
     // TEST: a new way to calculate radius? WIP.
     let rand = Math.random(); // a float value from 0-1
-    rand = rand * rand * rand; // lazy way to skew to lower values
+    rand = rand * rand * rand * rand; // lazy way to skew to lower values
     let min = 2;
-    let max = 8; 
+    let max = 7; 
     radius = Math.floor(rand * (max - min + 1) + min);
     // TODO: randomly tweak the colors of the stars so everything isn't 
     // a perfect uniform white (since that's just not what the sky looks like)
     // oh, and make sure not to make them green
-    drawOrb(ctx, c1, c2, c3, x, y, radius, false);
+    // future reading:
+    // https://en.wikipedia.org/wiki/Main_sequence
+    // https://en.wikipedia.org/wiki/Stellar_classification
+    // attempt 1: fake it
+    rand = Math.random();
+    let chance = 0.20; // 20% chance for a colored star 
+    if (rand < chance/2) { // red star, 10% chance
+      // to make the star redder, decrease its green and blue components
+      let redAmt = Math.random() / 3;
+      let c1n = new RGBA(c1.r, c1.g-(redAmt * c1.g), c1.b-(redAmt * c1.b), c1.a);
+      let c2n = new RGBA(c2.r, c2.g-(redAmt * c2.g), c2.b-(redAmt * c1.b), c2.a);
+
+      drawOrb(ctx, c1n, c2n, c3, x, y, radius, false);
+    } else if (rand < chance) { // blue star, 10% chance
+      // to make the star bluer, decrease its red and green components
+      // mmmm this isn't quite right since they're not so much bluer but cyaner 
+      let blueAmt = Math.random() / 4;
+      let c1n = new RGBA(c1.r-(blueAmt * c1.r), c1.g, c1.b, c1.a);
+      let c2n = new RGBA(c2.r-(blueAmt * c1.r), c2.g, c2.b, c2.a);
+
+      drawOrb(ctx, c1n, c2n, c3, x, y, radius, false);
+    } else {
+      drawOrb(ctx, c1, c2, c3, x, y, radius, false);
+    }
+
   }
   let oc1 = new RGBA(0, 255, 0,  1);
   let oc2 = new RGBA(0, 128, 0,  1);
   let oc3 = new RGBA(0, 10,  0, 0);
-  drawOrb(ctx, oc1, oc2, oc3, width/2, height/2, 100, false);
+  //drawOrb(ctx, oc1, oc2, oc3, width/2, height/2, 100, false);
 
   // so i think what i need to do is make a gradient style with createRadialGradient()
   // and then use that fill style on an ellipse
