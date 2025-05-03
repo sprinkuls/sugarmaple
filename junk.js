@@ -29,7 +29,7 @@ function maxi(a, b) {
 }
 
 // Constants
-const mainColor = "#0F0"
+const mainColor = "#555"
 const body = document.body;
 const html = document.querySelector("html");
 const canvas = document.createElement("canvas");
@@ -56,6 +56,7 @@ canvas.style.position = "fixed";
 
 canvas.style.boxSizing = "border-box";
 canvas.style.boxShadow = `inset 0 0 2.5em ${mainColor}`;
+//canvas.style.boxShadow = `inset 0 0 2.5em #333`;
 canvas.style.zIndex = "-1"; // So the text stays above the background
 
 //// Style the text in the doc (this would probably be nicer to do with CSS)
@@ -63,6 +64,9 @@ let tc = document.getElementById("textcontainer");
 tc.style.padding = "2.5rem";
 tc.style.textAlign = "center";
 //tc.style.fontSize = "larger";
+if (window.innerWidth < 500) {
+  tc.style.fontSize = "larger";
+}
 let text = document.getElementById("text");
 text.style.backgroundColor = "black";
 
