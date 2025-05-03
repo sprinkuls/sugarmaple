@@ -55,8 +55,9 @@ body.insertAdjacentElement("afterbegin", canvas);
 canvas.style.position = "fixed";
 
 canvas.style.boxSizing = "border-box";
-canvas.style.boxShadow = `inset 0 0 2.5em ${mainColor}`;
-//canvas.style.boxShadow = `inset 0 0 2.5em #333`;
+//canvas.style.boxShadow = `inset 0 0 2.5em ${mainColor}`;
+canvas.style.boxShadow = `inset 0 0 0.5em #222`;
+//canvas.style.border = "silver 2px solid";
 canvas.style.zIndex = "-1"; // So the text stays above the background
 
 //// Style the text in the doc (this would probably be nicer to do with CSS)
@@ -107,20 +108,30 @@ function draw() {
     // https://en.wikipedia.org/wiki/Main_sequence
     // https://en.wikipedia.org/wiki/Stellar_classification
     // attempt 1: fake it
+
+    // TODO: make it so the size of the star drawn corresponds with the correct
+    // color; smaller means red, larger means blue
+    // actually, isn't that unnecessary? connecting size to color like that would
+    // imply that every star was an equal distance from the observer. a close
+    // but small star can be big and red, and a far big star could be blue.
     rand = Math.random();
     let chance = 0.20; // 20% chance for a colored star 
     if (rand < chance/2) { // red star, 10% chance
       // to make the star redder, decrease its green and blue components
+      //let redAmt = Math.random() * 0.8;
+
       let redAmt = Math.random() / 3;
+      //let c1n = new RGBA(c1.r, c1.g-(redAmt * c1.g * 0.5), c1.b-(redAmt * c1.b * 0.5), c1.a);
       let c1n = new RGBA(c1.r, c1.g-(redAmt * c1.g), c1.b-(redAmt * c1.b), c1.a);
+      //c1n = c1;
       let c2n = new RGBA(c2.r, c2.g-(redAmt * c2.g), c2.b-(redAmt * c1.b), c2.a);
 
       drawOrb(ctx, c1n, c2n, c3, x, y, radius, false);
     } else if (rand < chance) { // blue star, 10% chance
       // to make the star bluer, decrease its red and green components
       // mmmm this isn't quite right since they're not so much bluer but cyaner 
-      let blueAmt = Math.random() / 4;
-      let c1n = new RGBA(c1.r-(blueAmt * c1.r), c1.g, c1.b, c1.a);
+      let blueAmt = Math.random() / 3;
+      let c1n = new RGBA(c1.r-(blueAmt * c1.r * 0.5), c1.g, c1.b, c1.a);
       let c2n = new RGBA(c2.r-(blueAmt * c1.r), c2.g, c2.b, c2.a);
 
       drawOrb(ctx, c1n, c2n, c3, x, y, radius, false);
