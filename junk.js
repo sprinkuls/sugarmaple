@@ -1,7 +1,9 @@
-/* idea i'm putting here: do something with js to draw a background made of
-*  randomly positioned white circles on black bg, so it looks like stars :3
-*/
-
+// mmmm i really like how this looks and i wanna copy it a little bit
+// https://www.youtube.com/watch?v=NuoD5nUW6_U
+// i mean really before this there was an old csh sticker i had that star trails
+// in front of a utility pole / power line / etc and i always really loved it. 
+//
+// blehhhhhh javascript
 class RGBA {
   constructor(red, green, blue, alpha) {
     this.r = red;
@@ -14,6 +16,7 @@ class RGBA {
   }
 }
 
+// thank you mozilla
 function random(min, max) {
   const minCeiled = Math.ceil(min);
   const maxFloored = Math.floor(max);
@@ -44,7 +47,10 @@ html.style.height = "100%";
 html.style.margin = "0";
 
 body.style.color = mainColor;
-body.style.backgroundColor = "black";
+//body.style.backgroundColor = "#413936";
+//body.style.backgroundColor = "#2a2526";
+//body.style.backgroundColor = "#0e0c0d";
+
 body.style.backgroundColor = "rgb(0, 0, 0)";
 
 body.style.fontFamily = "Consolas, monospace";
@@ -85,6 +91,7 @@ function draw() {
   let c1 = new RGBA(255, 255, 255, 1);
   let c2 = new RGBA(128, 128, 128, 0.3);
   let c3 = new RGBA(0, 0, 0, 0);
+  c3 = new RGBA(65, 57, 54, 0);
 
   // draw stars randomly
   for (i = 0; i < 1000; i++) {
@@ -97,7 +104,7 @@ function draw() {
     let radius = random(1, 8);
     // TEST: a new way to calculate radius? WIP.
     let rand = Math.random(); // a float value from 0-1
-    rand = rand * rand * rand * rand; // lazy way to skew to lower values
+    rand = rand * rand * rand * rand * rand * rand; // lazy way to skew to lower values
     let min = 2;
     let max = 7; 
     radius = Math.floor(rand * (max - min + 1) + min);
@@ -115,7 +122,7 @@ function draw() {
     // imply that every star was an equal distance from the observer. a close
     // but small star can be big and red, and a far big star could be blue.
     rand = Math.random();
-    let chance = 0.20; // 20% chance for a colored star 
+    let chance = 0.10; // 20% chance for a colored star 
     if (rand < chance/2) { // red star, 10% chance
       // to make the star redder, decrease its green and blue components
       //let redAmt = Math.random() * 0.8;
