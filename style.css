@@ -280,24 +280,27 @@ a:visited {
 
 /* hide stuff when the screen is small
  * maybe change this to be some % rather px? 60%?
- * so that way screen size doesn't fuck things up*/
+ * so that way screen size doesn't fuck things up
+ */
 /* read this later:
- * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries*/
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries
+ */
 @media (max-width: 1200px) {
-    #sideways {
-        display: none;
-    }
+  #sideways {
+    /*display: none;*/
+    visibility: hidden;
+    /* TODO: this is where we'd make the other panel visible */
+  }
 
-    .sidebar {
-        display: none;
-    }
-
+  .sidebar {
+    visibility: hidden;
+  }
 }
 
 /* try to do stuff for phones? idk */
 @media (max-width: 500px) {
     #main {
-        font-size: larger;
+        font-size: x-large;
     }
 }
 
