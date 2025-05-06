@@ -3,6 +3,9 @@
 // but i'm really just re-making the same thing without looking at the code to
 // see what i learn from doing so :3
 
+// this is a pretty naive implementation, because the person implementing it
+// is pretty naive
+
 console.log("bweh");
 
 // store the current cursor position
@@ -76,8 +79,13 @@ addEventListener("mousemove", (event) => {
   //console.log(cursorX, cursorY);
 })
 
-// store a handle to the setInterval process(? is that the right word)
+// store a handle to setInterval process(? is that the right word)
 let handle;
+
+const closeness = 50; // how close (in px) to get to the cursor before stopping
+const updateTime = 100; // # of ms between each run of interval
+const speed = 200; // # of px to move each second
+const N = speed * (updateTime/1000); // constant for how fast the critter should move
 
 // start the thing running
 function play() {
@@ -86,19 +94,26 @@ function play() {
   // handle now refers to this specific thing
   handle = setInterval(() => {
     // cursor has yet to be moved, or critter already close to the cursor 
-    if (cursorX == -1 || dist(cursorX,cursorY, critterX,critterY) < 64) {
+    if (cursorX == -1 || dist(cursorX,cursorY, critterX,critterY) < closeness) {
       console.log("resting...");
     }
     // critter needs to run to the cursor
     else {
-      critter.style.left = `${cursorX}px`;
-      critter.style.top =  `${cursorY}px`;
-      critterX = cursorX;
-      critterY = cursorY;
+      let y = cursorY - critterY;
+      let x = cursorX - critterX;
+      let theta = Math.atan2(y,x);
+      // yeah, i took trig. 
+      y = N * Math.sin(theta);
+      x = N * Math.cos(theta);
+      critterX += x;
+      critterY += y;
+
+      critter.style.left = `${critterX}px`;
+      critter.style.top =  `${critterY}px`;
       console.log("running!!");
       console.log(critter.style.left, critter.style.top);
     } 
-  }, 100); // testing, code runs 10x/sec (is this too high? too low?)
+  }, updateTime);
 
 }
 
