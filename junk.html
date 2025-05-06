@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <link rel="icon" href="favicon.png"/>
     <title>sugar maple</title>
-
+    <!-- you can't make me create a .css file -->
     <style>
     #coordinates {
       position: fixed;
@@ -24,7 +24,6 @@
       color: rgb(13, 117, 255);
       background-color: rgb(245, 238, 230);
       font-family: 'Verdana', sans-serif;
-      cursor: url("shaymin.png"), auto;
     }
     #stripe {
       position: absolute;
@@ -32,24 +31,24 @@
       left: 80%;
       width: 20%;
       height: 100%;
-      background-color: rgba(13, 117, 255, 0.5)
+      background-color: rgba(13, 117, 255, 0.5);
+      z-index: -1;
     }
     </style>
-    <script src="junk.js" defer></script>
+    <script src="critter.js" defer></script>
 
   </head>
   <body>
     <div id="stripe"></div>
+    <!--
     <p>don't quite know what to put on this one.</p>
     <p>the last one had a black background, maybe keep this one white?</p>
     <p>i wanted to mess around with making something that follows the cursor.
     maybe here is where i do it?</p>
+    -->
     <p style="font-size: xx-large;">( -_•)︻デ══一</p>
 
-    <!--<canvas id="canvas"></canvas>-->
-    <div id="coordinates">
-      you have not moved your mouse yet...
-    </div>
+    <button id="button">generate a creature NOW!</button>
 
   </body>
 </html>

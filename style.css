@@ -17,6 +17,16 @@ h2 {
     color: #e9b7aa;
 }
 
+hr {
+  border: none;
+  border-top: 3px solid #c7b388;
+  border-bottom: 3px solid #c7b388;
+  overflow: visible;
+  text-align: center;
+  height: 0.1em;
+  width: 100%; /* ok cool */
+}
+
 p {
     margin: 0.5em;
 }
